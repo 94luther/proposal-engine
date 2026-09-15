@@ -1,0 +1,7 @@
+inbox/
+out/
+seen.json
+watch-log.txt
+NEEDS-LUTHER.md
+*.pdf
+__pycache__/

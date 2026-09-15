@@ -1,0 +1,210 @@
+{
+  "name": "TEMPLATE. Copy this file, name it after the industry, and fill it in.",
+  "match": [
+    "words",
+    "that",
+    "identify",
+    "this",
+    "industry",
+    "in",
+    "an",
+    "email"
+  ],
+  "ask": "...",
+  "cycle": {
+    "toc": "...",
+    "kick": "...",
+    "title": "...",
+    "sub": "...",
+    "months": [
+      "..."
+    ],
+    "rows": [
+      {
+        "label": "...",
+        "offset": 32
+      },
+      {
+        "label": "...",
+        "offset": 55
+      }
+    ],
+    "peak": {
+      "x": 146,
+      "label": "..."
+    },
+    "table_title": "...",
+    "table_cols": [
+      "..."
+    ],
+    "table_widths": [
+      "..."
+    ],
+    "table_rows": [
+      [
+        "..."
+      ],
+      [
+        "..."
+      ]
+    ],
+    "aside_title": "...",
+    "aside": [
+      "..."
+    ],
+    "aside_stats": [
+      {
+        "v": "...",
+        "k": "..."
+      },
+      {
+        "v": "...",
+        "k": "..."
+      }
+    ],
+    "source": "..."
+  },
+  "clock": {
+    "toc": "...",
+    "kick": "...",
+    "title": "...",
+    "sub": "...",
+    "t0": "...",
+    "t0sub": "...",
+    "t1": "...",
+    "t1sub": "...",
+    "t2": "...",
+    "t2sub": "...",
+    "span1": "...",
+    "span2": "...",
+    "items_title": "...",
+    "items": [
+      "..."
+    ],
+    "why_title": "...",
+    "why": [
+      "..."
+    ],
+    "fix_title": "...",
+    "fix": [
+      "..."
+    ],
+    "fix_note": "...",
+    "panels": [
+      {
+        "t": "...",
+        "cls": "...",
+        "p": [
+          "..."
+        ]
+      },
+      {
+        "t": "...",
+        "cols": [
+          "..."
+        ],
+        "widths": [
+          "..."
+        ],
+        "rows": [
+          [
+            "..."
+          ],
+          [
+            "..."
+          ]
+        ]
+      }
+    ],
+    "source": "..."
+  },
+  "hub": {
+    "title": "...",
+    "hub": "...",
+    "hubsub": "...",
+    "left": [
+      {
+        "t": "...",
+        "s": "..."
+      },
+      {
+        "t": "...",
+        "s": "..."
+      }
+    ],
+    "right": [
+      {
+        "t": "...",
+        "s": "..."
+      },
+      {
+        "t": "...",
+        "s": "..."
+      }
+    ],
+    "bottom": "...",
+    "bottomsub": "...",
+    "why_title": "...",
+    "why": [
+      "..."
+    ],
+    "stats": [
+      {
+        "v": "...",
+        "k": "..."
+      },
+      {
+        "v": "...",
+        "k": "..."
+      }
+    ],
+    "closer": "...",
+    "towns_title": "...",
+    "towns": [
+      [
+        "..."
+      ],
+      [
+        "..."
+      ]
+    ],
+    "source": "..."
+  },
+  "failures": {
+    "title": "...",
+    "cols": [
+      "..."
+    ],
+    "widths": [
+      "..."
+    ],
+    "rows": [
+      [
+        "..."
+      ],
+      [
+        "..."
+      ]
+    ],
+    "not": [
+      "..."
+    ],
+    "measure": [
+      "..."
+    ],
+    "source": "..."
+  },
+  "_how": {
+    "1_cycle": "The recurring calendar. Dates that repeat whether anybody feels like it or not, with the PUBLISHED consequence of missing each one. Never a consequence you assumed.",
+    "2_clock": "The deadline inside this profession that outsiders have never heard of. This is the page that earns the meeting. For auditors it is the standard that caps file assembly at sixty days after the report date.",
+    "3_hub": "Where their documents and goods actually travel. One hub, three origins, three destinations, one archive.",
+    "4_failures": "Five things that go wrong, what each costs, what replaces it.",
+    "rules": [
+      "Every figure carries its source on the page.",
+      "Never claim a requirement an authority has not published.",
+      "Never state a finding about the buyer. You have not been inside their operation.",
+      "No tariff. Ever.",
+      "Zero dash characters. The renderer fails the build on one."
+    ]
+  }
+}

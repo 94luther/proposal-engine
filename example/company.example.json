@@ -1,0 +1,20 @@
+{
+  "name": "Example Audit Partners",
+  "slug": "Example-Audit-Partners",
+  "address": "12 Example Street, Your City",
+  "sector": "_TEMPLATE",
+  "doc_no": "PR 2026 EAP 01",
+  "headline": "Your deadlines are set<br>by statute and by standard.<b><br>Ours is the only part<br>that can still be late.</b>",
+  "dek": "A document movement proposal for a practice working from two offices and filing to three authorities.",
+  "ask": "Who carries this for you today?",
+  "provenance": "Prepared after a quotation for this work was shared with us.",
+  "control": {
+    "Document": "Service Proposal PR 2026 EAP 01",
+    "Issued": "15 September 2026",
+    "Prepared for": "Office of the Managing Partner",
+    "Validity": "30 days from issue",
+    "Prepared by": "Your Name, Your Company",
+    "Classification": "Commercial in confidence",
+    "Status": "For discussion, not an offer"
+  }
+}

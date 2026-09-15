@@ -1,0 +1,13 @@
+{
+  "_note": "Who the proposal is FROM. Replace every value before using this. own_domain_pattern stops the watcher treating your own colleagues as sales leads.",
+  "name": "Your Company",
+  "city": "Your City",
+  "address": "Your street address",
+  "website": "yourcompany.example",
+  "rep_name": "Your Name",
+  "rep_email": "you@yourcompany.example",
+  "rep_office": "000 0000",
+  "rep_mobile": "00 000 000",
+  "strapline": "subject to operational assessment, credit approval and a signed service agreement",
+  "own_domain_pattern": "yourcompany\\.example"
+}
