@@ -1,5 +1,8 @@
 # Proposal Engine
 
+**By [Luther Roberts](https://github.com/94luther)** &middot; Business Development, Sprint Couriers,
+Gaborone, Botswana
+
 Somebody forwards you a quote a competitor sent them. Thirty minutes later a personalised eight
 page proposal is sitting in your drafts folder with the PDF attached, ready to read and send.
 
@@ -7,6 +10,22 @@ It never sends by itself. **It never calls a language model.** Everything in the
 deterministic, which is why it can run every thirty minutes forever and cost nothing.
 
 Built for a courier business in Gaborone, Botswana. The engine is industry agnostic.
+
+---
+
+## Why I built it
+
+I kept losing work to quotes I never saw, and winning it when I happened to know something about
+how the customer's week actually ran. That knowledge does not scale by working harder. It scales by
+being written down once per industry and reused.
+
+So the expensive thinking happens once, for a trade, and every company in that trade after that
+costs nothing. Everything else is plumbing.
+
+The first version was five airy pages and it was rubbish. It looked designed and said nothing. What
+is here now is dense on purpose, because the people who sign these read documents for a living.
+
+&mdash; Luther Roberts
 
 ---
 
@@ -125,6 +144,14 @@ Real industry playbooks and all client data live outside this repository.
 - There is no company level research. A playbook is industry level by design, because that is what
   makes it free.
 
+## Author
+
+**Luther Roberts**, Gaborone, Botswana &middot; [github.com/94luther](https://github.com/94luther)
+
+Built for [Sprint Couriers](https://sprintcouriers.co.bw). Written with AI assistance, directed,
+specified and corrected by me over several rounds. The industry playbooks, which are the part that
+makes it work, are mine and are not in this repository.
+
 ## Licence
 
-MIT. See `LICENSE`.
+MIT, Copyright 2026 Luther Roberts. See `LICENSE`.
