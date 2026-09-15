@@ -29,6 +29,28 @@ They do not control `supplier.json`, the industry playbooks, or the code.
 | Being tricked into treating your own colleagues as prospects | Internal addresses are skipped before anything is built |
 | An email sent automatically on your behalf | Nothing is ever sent. Drafts only |
 
+## Review history
+
+**16 September 2026, independent security review.** Findings accepted and fixed in full:
+
+| Finding | Status |
+|---|---|
+| Failed builds could attach a stale or rejected PDF, because the watcher tested for a file rather than for success | Fixed. The builder prints the artifact path only on success, each run writes to its own timestamped folder, and the exit code is honoured |
+| Lists in a company file walked straight past the HTML escaper | Fixed. Text fields must be text or the build refuses, and lists are escaped |
+| A slug of `..` survived sanitisation and resolved to the repository root | Fixed. Dot segments and Windows reserved names are rejected |
+| The ignore file named a queue file that no longer existed, so review notes could be committed | Fixed |
+| The five item limit bounded successes, not attempts, so failures were unbounded | Fixed. Attempts are bounded separately |
+| PowerShell wrote a byte order mark that Python rejected, so the watcher had never built anything | Fixed. Input is read as utf-8-sig and written without a mark |
+| The output filename was reconstructed by the caller instead of returned by the builder | Fixed |
+| The scheduled task expired after 23 hours | Fixed. It now repeats indefinitely |
+| A dry run wrote state and marked messages seen | Fixed. A dry run changes nothing |
+| The template playbook matched on words like "in" and "an" | Fixed. It matches nothing until filled in |
+| The watcher skipped internal senders, which meant it ignored your own forwards | Fixed. The forwarder may be internal. The company named inside the forward may not be |
+| The unresolved queue was overwritten each run | Fixed. Entries persist until resolved |
+
+Found during the fix: a draft could be staged with no recipient when the forwarder's address could
+not be read. It now goes to the human queue instead, with the PDF path.
+
 ## Known limitations, stated rather than hidden
 
 - **The generated HTML is opened in a headless browser on your machine.** Escaping is the only

@@ -45,6 +45,7 @@ Get-ChildItem (Join-Path $SK "sectors") -Filter *.json | ForEach-Object {
 }
 Log "playbooks loaded: $($sectors.Keys -join ', ')"
 
+New-Item -ItemType Directory -Force -Path (Join-Path $SK "inbox"), (Join-Path $SK "out") | Out-Null
 $already = if (Test-Path $seen) { Get-Content $seen -Raw | ConvertFrom-Json } else { @() }
 $already = @($already)
 
@@ -55,11 +56,11 @@ $drafts = $ns.GetDefaultFolder(16)
 $items  = $inbox.Items
 $items.Sort("[ReceivedTime]", $true)
 
-$made = 0; $unknown = @()
+$made = 0; $attempts = 0; $unknown = @()
 $cut = (Get-Date).AddDays(-14)
 
 foreach ($m in $items) {
-    if ($made -ge 5) { break }
+    if ($made -ge 5 -or $attempts -ge 15) { break }   # bound the work, not just the wins
     try {
         if ($m.ReceivedTime -lt $cut) { break }
         $id = $m.EntryID
@@ -129,17 +130,33 @@ foreach ($m in $items) {
             }
         }
         $cf = Join-Path $SK "inbox\$slug.json"
-        $co | ConvertTo-Json -Depth 6 | Set-Content $cf -Encoding UTF8
+        [IO.File]::WriteAllText($cf, ($co | ConvertTo-Json -Depth 6), (New-Object Text.UTF8Encoding($false)))
 
-        if ($WhatIf) { Log "WHATIF would build $company as $sector"; $already += $id; $made++; continue }
+        if ($WhatIf) { Log "WHATIF would build $company as $sector"; $made++; continue }
 
-        $py = & python (Join-Path $SK "build.py") $cf 2>&1
-        $pdf = Join-Path $SK "out\$slug\Sprint-Couriers-$slug.pdf"
-        if (-not (Test-Path $pdf)) { Log "BUILD FAILED for $company : $py"; $already += $id; continue }
+        $stamp = Get-Date -Format "yyyyMMdd-HHmmss"
+        $runDir = Join-Path $SK "out\$slug-$stamp"
+        $py = & python (Join-Path $SK "build.py") $cf $runDir 2>&1
+        $code = $LASTEXITCODE
+        # The builder prints ARTIFACT=<path> only on success. Never guess the filename, and never
+        # treat "a pdf exists" as success: that is how a stale or rejected file gets attached.
+        $pdf = ($py | Select-String -Pattern '^ARTIFACT=(.+)$' | Select-Object -Last 1).Matches.Groups[1].Value
+        if ($code -ne 0 -or -not $pdf -or -not (Test-Path $pdf)) {
+            Log "BUILD FAILED for $company (exit $code). Nothing staged. $py"
+            $already += $id; $attempts++; continue
+        }
 
         # stage the reply as a DRAFT. Never send.
+        # A draft with no recipient is a trap: it looks finished in the folder and goes nowhere.
+        $to = $m.SenderEmailAddress
+        if (-not $to) { try { $to = $m.Sender.GetExchangeUser().PrimarySmtpAddress } catch {} }
+        if (-not $to) {
+            Log "built $company but the forwarder has no readable address, PDF left at $pdf"
+            $unknown += "* $($m.ReceivedTime.ToString('dd MMM HH:mm')) $company built, but no reply address could be read. PDF: $pdf"
+            $already += $id; $made++; continue
+        }
         $d = $ol.CreateItem(0)
-        $d.To = $m.SenderEmailAddress
+        $d.To = $to
         $d.Subject = "Re: $subj"
         $d.Body = @"
 Hi,
@@ -169,7 +186,9 @@ $already | ConvertTo-Json | Set-Content $seen -Encoding UTF8
 
 if ($unknown.Count) {
     $hdr = "# Quotes the factory could not finish`n`nThese were found but not built. Nothing was guessed.`n`n"
-    ($hdr + ($unknown -join "`n")) | Set-Content $need -Encoding UTF8
+    $prev = if (Test-Path $need) { (Get-Content $need -Raw) -replace [regex]::Escape($hdr), "" } else { "" }
+    ($hdr + (($unknown + ($prev -split "`n" | Where-Object { $_ -match "^\* " })) | Select-Object -Unique | Sort-Object -Descending) -join "`n") |
+        Set-Content $need -Encoding UTF8
     Log "$($unknown.Count) need a human, written to NEEDS-A-HUMAN.md"
 }
 Log "run complete, $made proposal(s) built"

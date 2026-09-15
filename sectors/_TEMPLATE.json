@@ -1,15 +1,6 @@
 {
   "name": "TEMPLATE. Copy this file, name it after the industry, and fill it in.",
-  "match": [
-    "words",
-    "that",
-    "identify",
-    "this",
-    "industry",
-    "in",
-    "an",
-    "email"
-  ],
+  "match": [],
   "ask": "...",
   "cycle": {
     "toc": "...",
@@ -205,6 +196,7 @@
       "Never state a finding about the buyer. You have not been inside their operation.",
       "No tariff. Ever.",
       "Zero dash characters. The renderer fails the build on one."
-    ]
+    ],
+    "0_match": "Leave match EMPTY in the template. The watcher skips any playbook with no match words, so a half finished template can never be chosen by accident."
   }
 }

@@ -44,13 +44,23 @@ def SAFE(s):
 def clean(co):
     """Escape every string in the company file before any of it reaches the page."""
     rich = {"headline"}                      # may carry <br> and <b>, nothing else
+    text_fields = {"name", "slug", "address", "doc_no", "headline", "dek", "ask", "provenance", "sector"}
+    for k in text_fields:
+        if k in co and not isinstance(co[k], str):
+            raise SystemExit(f"refusing to build: {k!r} must be text, got {type(co[k]).__name__}")
     for k, v in list(co.items()):
         if isinstance(v, str):
             co[k] = SAFE(v) if k in rich else E(v)
         elif isinstance(v, dict):
             co[k] = {E(a): E(b) for a, b in v.items()}
+        elif isinstance(v, list):
+            co[k] = [E(x) for x in v]        # a list used to walk straight past the escaper
     # a slug becomes a folder name and a sector becomes a file path, so neither may escape the tree
-    co["slug"] = re.sub(r"[^A-Za-z0-9._-]", "-", co.get("slug", "proposal"))[:80] or "proposal"
+    slug = re.sub(r"[^A-Za-z0-9._-]", "-", str(co.get("slug", "proposal")))[:80].strip(". ")
+    if not slug or set(slug) <= {"."} or slug.upper().split(".")[0] in {
+            "CON", "PRN", "AUX", "NUL", "COM1", "COM2", "LPT1", "LPT2"}:
+        slug = "proposal"
+    co["slug"] = slug
     if not re.fullmatch(r"[A-Za-z0-9._-]{1,60}", str(co.get("sector", ""))):
         raise SystemExit(f"refusing to build: sector name is not a plain file name: {co.get('sector')!r}")
     return co
@@ -386,8 +396,9 @@ def page_failures(co, s, n):
 
 # ────────────────────────────────── assemble ──────────────────────────────────
 def build(company_path, outdir=None):
-    co = clean(json.loads(pathlib.Path(company_path).read_text(encoding="utf-8")))
-    sector = json.loads((HERE / "sectors" / f"{co['sector']}.json").read_text(encoding="utf-8"))
+    # utf-8-sig, because PowerShell writes a byte order mark that plain utf-8 rejects.
+    co = clean(json.loads(pathlib.Path(company_path).read_text(encoding="utf-8-sig")))
+    sector = json.loads((HERE / "sectors" / f"{co['sector']}.json").read_text(encoding="utf-8-sig"))
     out = pathlib.Path(outdir or (HERE / "out" / co["slug"])).resolve()
     out.mkdir(parents=True, exist_ok=True)
     for a in (HERE / "assets").iterdir():
@@ -415,6 +426,9 @@ def build(company_path, outdir=None):
     print(r.stdout.strip())
     if r.returncode != 0:
         print(r.stderr.strip())
+    # The caller must not reconstruct this path. Say it plainly, once.
+    if r.returncode == 0 and pdf.exists():
+        print(f"ARTIFACT={pdf}")
     return pdf, r.returncode
 
 

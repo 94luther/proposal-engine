@@ -3,5 +3,6 @@ out/
 seen.json
 watch-log.txt
 NEEDS-LUTHER.md
+NEEDS-A-HUMAN.md
 *.pdf
 __pycache__/
