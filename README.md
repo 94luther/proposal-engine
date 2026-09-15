@@ -134,6 +134,14 @@ Install-Task.ps1    the scheduled task
 
 Real industry playbooks and all client data live outside this repository.
 
+## Status
+
+Last pushed 15 September 2026. This is the engine as it runs in
+production. The industry playbooks that drive it improve continuously and are not public, so treat
+the `sectors/_TEMPLATE.json` here as the shape, not the state of the art.
+
+Security posture and known limitations are in [SECURITY.md](SECURITY.md).
+
 ## Honest limits
 
 - The watcher is Outlook on Windows only. The builder is cross platform.
