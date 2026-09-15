@@ -18,6 +18,7 @@ Zero model calls. Once an industry playbook exists, every new company in that in
 import datetime as dt
 import html
 import json
+import re
 import pathlib
 import subprocess
 import sys
@@ -26,6 +27,33 @@ HERE = pathlib.Path(__file__).resolve().parent
 RENDER = HERE / "render-pdf.py"
 
 E = lambda s: html.escape(str(s), quote=False)
+
+# A company file is UNTRUSTED. In the automated path its fields are scraped out of the body of an
+# email anybody can send, so treat every value as hostile until it has been escaped.
+_ALLOWED = (("&lt;br&gt;", "<br>"), ("&lt;b&gt;", "<b>"), ("&lt;/b&gt;", "</b>"))
+
+
+def SAFE(s):
+    """Escape, then put back only the three tags a headline is allowed to use."""
+    out = html.escape(str(s), quote=False)
+    for bad, good in _ALLOWED:
+        out = out.replace(bad, good)
+    return out
+
+
+def clean(co):
+    """Escape every string in the company file before any of it reaches the page."""
+    rich = {"headline"}                      # may carry <br> and <b>, nothing else
+    for k, v in list(co.items()):
+        if isinstance(v, str):
+            co[k] = SAFE(v) if k in rich else E(v)
+        elif isinstance(v, dict):
+            co[k] = {E(a): E(b) for a, b in v.items()}
+    # a slug becomes a folder name and a sector becomes a file path, so neither may escape the tree
+    co["slug"] = re.sub(r"[^A-Za-z0-9._-]", "-", co.get("slug", "proposal"))[:80] or "proposal"
+    if not re.fullmatch(r"[A-Za-z0-9._-]{1,60}", str(co.get("sector", ""))):
+        raise SystemExit(f"refusing to build: sector name is not a plain file name: {co.get('sector')!r}")
+    return co
 
 # Who the proposal is FROM. Kept out of the code so the engine is not tied to one company.
 SUP = json.loads((HERE / "supplier.json").read_text(encoding="utf-8"))
@@ -358,7 +386,7 @@ def page_failures(co, s, n):
 
 # ────────────────────────────────── assemble ──────────────────────────────────
 def build(company_path, outdir=None):
-    co = json.loads(pathlib.Path(company_path).read_text(encoding="utf-8"))
+    co = clean(json.loads(pathlib.Path(company_path).read_text(encoding="utf-8")))
     sector = json.loads((HERE / "sectors" / f"{co['sector']}.json").read_text(encoding="utf-8"))
     out = pathlib.Path(outdir or (HERE / "out" / co["slug"])).resolve()
     out.mkdir(parents=True, exist_ok=True)
